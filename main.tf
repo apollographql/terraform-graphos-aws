@@ -9,9 +9,8 @@ terraform {
 }
 
 // ALB subgraphs
-
 module "alb_subgraphs" {
-  // TODO: only create if there are ALB subgraphs
+  count = length(var.alb_target_group_arns) > 0 ? 1 : 0
 
   source = "./modules/alb-subgraphs"
 
