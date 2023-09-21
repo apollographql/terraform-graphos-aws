@@ -8,6 +8,16 @@ terraform {
   }
 }
 
+// Lattice Service
+module "lattice" {
+  source = "../lattice-service"
+
+  prefix                         = var.prefix
+  tags                           = var.tags
+  graphos_organizational_unit_id = var.graphos_organizational_unit_id
+  graphos_account_id             = var.graphos_account_id
+}
+
 // Target groups for the Lambda functions
 resource "aws_vpclattice_target_group" "this" {
   for_each = var.lambda_function_arns
@@ -22,7 +32,7 @@ resource "aws_vpclattice_target_group_attachment" "this" {
   for_each = var.lambda_function_arns
 
   target_group_identifier = aws_vpclattice_target_group.this[each.key].id
-  target = {
+  target {
     id = each.value
   }
 }
@@ -36,4 +46,36 @@ resource "aws_lambda_permission" "this" {
   function_name = each.value
   principal     = "vpc-lattice.amazonaws.com"
   source_arn    = aws_vpclattice_target_group.this[each.key].arn
+}
+
+// Listeners for Lambda functions
+resource "aws_vpclattice_listener_rule" "lambda" {
+  for_each = var.lambda_function_arns
+
+  name                = "${var.prefix}-${each.key}"
+  listener_identifier = module.lattice.lattice_listener_arn
+  service_identifier  = module.lattice.lattice_service_arn
+  priority            = index([for key, _ in var.lambda_function_arns : key], each.key) + 1
+
+  // When the path starts with `/{subgraph_name}/`
+  match {
+    http_match {
+      path_match {
+        case_sensitive = true
+        match {
+          prefix = "/${each.key}/"
+        }
+      }
+    }
+  }
+
+  // Send to the target group ARN
+  action {
+    forward {
+      target_groups {
+        target_group_identifier = aws_vpclattice_target_group.this[each.key].arn
+        weight                  = 1
+      }
+    }
+  }
 }

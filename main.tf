@@ -10,24 +10,31 @@ terraform {
 
 // ALB subgraphs
 module "alb_subgraphs" {
-  count = length(var.alb_target_group_arns) > 0 ? 1 : 0
+  for_each = var.alb_subgraphs
 
   source = "./modules/alb-subgraphs"
 
-  prefix                     = var.prefix
-  tags                       = var.tags
-  vpc_id                     = var.alb_vpc_id
-  subnet_ids                 = var.alb_subnet_ids
-  security_group_ids         = var.alb_security_group_ids
-  alb_target_group_arns      = var.alb_target_group_arns
-  enable_deletion_protection = var.enable_deletion_protection
+  prefix                         = "${var.prefix}-${each.key}"
+  graphos_account_id             = var.graphos_account_id
+  graphos_organizational_unit_id = var.graphos_organizational_unit_id
+  tags                           = var.tags
+
+  vpc_id  = each.value.vpc_id
+  alb_arn = each.value.alb_arn
+
 }
 
 // Lambda subgraphs
 module "lambda_subgraphs" {
+  // Only create this module if there are Lambda function ARNs
+  count = length(var.lambda_subgraphs) > 0 ? 1 : 0
+
   source = "./modules/lambda-subgraphs"
 
-  prefix               = var.prefix
-  lambda_function_arns = var.lambda_function_arns
-  tags                 = var.tags
+  prefix                         = "${var.prefix}-lambda"
+  graphos_account_id             = var.graphos_account_id
+  graphos_organizational_unit_id = var.graphos_organizational_unit_id
+  tags                           = var.tags
+
+  lambda_function_arns = { for name, value in var.lambda_subgraphs : name => value.lambda_function_arn }
 }

@@ -4,6 +4,23 @@ variable "prefix" {
   default     = "graphos"
 }
 
+variable "tags" {
+  description = "Tags for AWS resources created in this module"
+  type        = map(string)
+  default     = {}
+}
+
+variable "graphos_organizational_unit_id" {
+  type    = string
+  default = "ou-leyb-fvqz35yo"
+}
+
+variable "graphos_account_id" {
+  type    = string
+  default = "282421723282"
+}
+
+
 variable "vpc_id" {
   description = "ID of the VPC where the subgraphs run"
   type        = string
@@ -13,37 +30,7 @@ variable "vpc_id" {
   }
 }
 
-variable "subnet_ids" {
-  description = "IDs of the subnets where the internal ALB will run"
-  type        = list(string)
-  validation {
-    condition     = length(subnet_ids) > 0
-    error_message = "subnet_ids must contain at least 1 subnet ID."
-  }
-}
-
-variable "security_group_ids" {
-  description = "Security group IDs used by the internal ALB"
-  type        = list(string)
-  validation {
-    condition     = length(security_group_ids) > 0
-    error_message = "security_group_ids must contain at least 1 security group ID."
-  }
-}
-
-variable "alb_target_group_arns" {
-  description = "Mapping of subgraph names to ALB target group ARNs"
-  type        = map(string)
-}
-
-variable "enable_deletion_protection" {
-  description = "Enable deletion protection on the internal ALB"
-  type        = bool
-  default     = true
-}
-
-variable "tags" {
-  description = "Tags for AWS resources created in this module"
-  type        = map(string)
-  default     = {}
+variable "alb_arn" {
+  description = "ARN of the load balancer"
+  type        = string
 }

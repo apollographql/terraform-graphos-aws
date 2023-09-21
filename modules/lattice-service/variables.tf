@@ -10,20 +10,10 @@ variable "tags" {
   default     = {}
 }
 
-variable "alb_subgraphs" {
-  description = "Mapping of name to Application Load Balancers"
-  type = map(object({
-    alb_arn = string
-    vpc_id  = string
-  }))
-}
-
-variable "lambda_subgraphs" {
-  description = "Map of subgraph name to Lambda Function ARNs"
-  type = map(object({
-    lambda_function_arn = string
-  }))
-  default = {}
+variable "default_target_group" {
+  description = "Default target group for the Lattice service (defaults to 404)"
+  type        = string
+  default     = ""
 }
 
 variable "graphos_organizational_unit_id" {

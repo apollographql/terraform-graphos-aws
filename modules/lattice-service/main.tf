@@ -64,49 +64,27 @@ resource "aws_vpclattice_listener" "this" {
   protocol    = "HTTPS"
   service_arn = aws_vpclattice_service.this.arn
 
-  tags = var.tags
-}
+  dynamic "default_action" {
+    for_each = length(var.default_target_group) == 0 ? toset([404]) : toset([])
 
-// Listener for ALBs
-resource "aws_vpclattice_listener_rule" "alb" {
-  // TODO: only create if there are ALB subgraphs
+    content {
+      fixed_response {
+        status_code = 404
+      }
+    }
+  }
 
-  name                = "${var.prefix}-alb"
-  listener_identifier = aws_vpclattice_listener.this.arn
-  service_identifier  = aws_vpclattice_service.this.arn
-  priority            = 0
-
-
-}
-
-// Listeners for Lambda functions
-resource "aws_vpclattice_listener_rule" "lambda" {
-  for_each = module.lambda_subgraphs.lattice_target_groups
-
-  name                = "${var.prefix}-${each.key}"
-  listener_identifier = aws_vpclattice_listener.this.arn
-  service_identifier  = aws_vpclattice_service.this.arn
-  priority            = index(module.lambda_subgraphs.lattice_target_groups, each.key) + 1
-
-  // When the path starts with `/{subgraph_name}/`
-  match {
-    http_match {
-      path_match {
-        case_sensitive = true
-        match {
-          prefix = "/${each.name}/"
+  dynamic "default_action" {
+    for_each = length(var.default_target_group) != 0 ? toset([var.default_target_group]) : toset([])
+    content {
+      forward {
+        target_groups {
+          target_group_identifier = var.default_target_group
+          weight                  = 1
         }
       }
     }
   }
 
-  // Send to the target group ARN
-  action {
-    forward {
-      target_groups {
-        target_group_identifier = each.value.arn
-        weight                  = 1
-      }
-    }
-  }
+  tags = var.tags
 }

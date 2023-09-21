@@ -11,8 +11,17 @@ resource "aws_ram_principal_association" "this" {
   resource_share_arn = aws_ram_resource_share.this.arn
 }
 
-// Associate the AWS VPC Lattice Service with this resource share
-resource "aws_ram_resource_association" "this" {
-  resource_arn       = aws_vpclattice_service.this.arn
+// Associate the AWS VPC Lattice Services with this resource share
+resource "aws_ram_resource_association" "alb_subgraphs" {
+  for_each = var.alb_subgraphs
+
+  resource_arn       = module.alb_subgraphs[each.key].lattice_service_arn
+  resource_share_arn = aws_ram_resource_share.this.arn
+}
+
+resource "aws_ram_resource_association" "lambda_subgraphs" {
+  count = length(var.lambda_subgraphs) > 0 ? 1 : 0
+
+  resource_arn       = module.lambda_subgraphs[0].lattice_service_arn
   resource_share_arn = aws_ram_resource_share.this.arn
 }
