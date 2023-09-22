@@ -14,7 +14,7 @@ module "alb_subgraphs" {
 
   source = "./modules/alb-subgraphs"
 
-  prefix                         = "${var.prefix}-${each.key}"
+  prefix                         = "${var.prefix}-alb-${each.key}"
   graphos_account_id             = var.graphos_account_id
   graphos_organizational_unit_id = var.graphos_organizational_unit_id
   tags                           = var.tags

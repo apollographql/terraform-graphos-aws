@@ -22,7 +22,7 @@ module "lattice" {
 resource "aws_vpclattice_target_group" "this" {
   for_each = var.lambda_function_arns
 
-  name = "${var.prefix}-lambda-${each.key}"
+  name = "${var.prefix}-${each.key}"
   type = "LAMBDA"
 
   tags = var.tags
