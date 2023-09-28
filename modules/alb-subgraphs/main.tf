@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">=1.2.0"
+  required_version = ">=1.5.0"
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -25,7 +25,7 @@ resource "aws_vpclattice_target_group" "this" {
   type = "ALB"
 
   config {
-    port           = 80
+    port           = var.alb_port
     protocol       = "HTTP"
     vpc_identifier = var.vpc_id
   }
@@ -38,6 +38,6 @@ resource "aws_vpclattice_target_group_attachment" "this" {
 
   target {
     id   = var.alb_arn
-    port = 80
+    port = var.alb_port
   }
 }
