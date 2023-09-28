@@ -20,7 +20,6 @@ variable "graphos_account_id" {
   default = "282421723282"
 }
 
-
 variable "vpc_id" {
   description = "ID of the VPC where the subgraphs run"
   type        = string
@@ -33,4 +32,10 @@ variable "vpc_id" {
 variable "alb_arn" {
   description = "ARN of the load balancer"
   type        = string
+}
+
+variable "alb_port" {
+  description = "Port for the ALB listener"
+  type        = number
+  default     = 80
 }
