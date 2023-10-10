@@ -69,7 +69,7 @@ check "security_group_ingress" {
       [for rule in data.aws_vpc_security_group_rule.subgraph : [rule.prefix_list_id, rule.from_port, rule.is_egress]],
       [data.aws_ec2_managed_prefix_list.lattice_ipv6.id, var.alb_port, false]
     )
-    error_message = "ALB ${data.aws_alb.subgraph.name} does not allow traffic from the Lattice managed prefix list"
+    error_message = "One of the security groups for ${data.aws_alb.subgraph.name} must allow TCP traffic from ${data.aws_ec2_managed_prefix_list.lattice_ipv4.id} and ${data.aws_ec2_managed_prefix_list.lattice_ipv6.id} on port ${var.alb_port}"
   }
 }
 
