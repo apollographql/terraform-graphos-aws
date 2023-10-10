@@ -84,7 +84,7 @@ module "graphos_aws" {
 * The ALB must be in the same AWS Region as the lattice services.
 * The ALB must be an **internal** load balancer.
 * The ALB must have a listener configured to listen on `HTTP` on port `80` by default or whatever value you provide to `alb_port`.
-* The security group associated with the ALB must allow TCP traffic on port `80` (or you must set `alb_port``) from the [VPC Lattice prefix list](https://docs.aws.amazon.com/vpc-lattice/latest/ug/security-groups.html).
+* The security group associated with the ALB must allow TCP traffic on port `80` (or you must set `alb_port`) from the [VPC Lattice prefix list](https://docs.aws.amazon.com/vpc-lattice/latest/ug/security-groups.html).
 * The `vpc_id` must be the same as the VPC where the ALB is deployed.
 
 ## Maintainers
