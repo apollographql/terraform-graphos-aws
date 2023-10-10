@@ -35,14 +35,15 @@ This module will create:
 
 ## Usage
 
-```
+```hcl
 module "graphos_aws" {
   source = "github.com/apollographql/terraform-graphos-aws"
 
   alb_subgraphs = {
     "some-subgraph" = {
-      alb_arn = "arn:aws:elasticloadbalancing:eu-west-1:123456789012:loadbalancer/app/some-app-name/1234567890abcdef"
-      vpc_id  = "vpc-1234567890abcdef0"
+      alb_arn  = "arn:aws:elasticloadbalancing:eu-west-1:123456789012:loadbalancer/app/some-app-name/1234567890abcdef" # Arn for the internal ALB
+      vpc_id   = "vpc-1234567890abcdef0" # VPC the load balancer is deployed to
+      alb_port = 80 # Or custom port 
     }
   }
 
@@ -61,6 +62,7 @@ module "graphos_aws" {
 * `alb_subgraphs`: map of subgraph names to ALB configuration
   * `alb_arn`: ARN of the Application Load Balancer
   * `vpc_id`: ID of the VPC where the Application Load Balancer is deployed
+  * `alb_port`: Port the ALB receives traffic through (defaults to 80)
 * `lambda_subgraphs`: map of subgraph names to Lambda functions
   * `lambda_function_arn`: ARN of the Lambda function
 
@@ -81,8 +83,8 @@ module "graphos_aws" {
 
 * The ALB must be in the same AWS Region as the lattice services.
 * The ALB must be an **internal** load balancer.
-* The ALB must have a listener configured to listen on `HTTP:80`.
-* The security group associated with the ALB must allow TCP traffic on port 80 from the [VPC Lattice prefix list](https://docs.aws.amazon.com/vpc-lattice/latest/ug/security-groups.html).
+* The ALB must have a listener configured to listen on `HTTP` on port `80` by default or whatever value you provide to `alb_port`.
+* The security group associated with the ALB must allow TCP traffic on port `80` (or you must set `alb_port``) from the [VPC Lattice prefix list](https://docs.aws.amazon.com/vpc-lattice/latest/ug/security-groups.html).
 * The `vpc_id` must be the same as the VPC where the ALB is deployed.
 
 ## Maintainers

@@ -21,6 +21,7 @@ module "alb_subgraphs" {
 
   vpc_id  = each.value.vpc_id
   alb_arn = each.value.alb_arn
+  alb_port = each.value.alb_port
 
 }
 
