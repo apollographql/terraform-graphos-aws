@@ -13,8 +13,9 @@ variable "tags" {
 variable "alb_subgraphs" {
   description = "Mapping of name to Application Load Balancers"
   type = map(object({
-    alb_arn = string
-    vpc_id  = string
+    alb_arn  = string
+    vpc_id   = string
+    alb_port = optional(number, 80)
   }))
 }
 
