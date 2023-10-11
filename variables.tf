@@ -15,7 +15,7 @@ variable "alb_subgraphs" {
   type = map(object({
     alb_arn  = string
     vpc_id   = string
-    alb_port = number
+    alb_port = optional(number, 80)
   }))
 }
 
