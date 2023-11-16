@@ -29,6 +29,12 @@ variable "vpc_id" {
   }
 }
 
+variable "principal_tags" {
+  description = "Restrict content based on the values of these tags"
+  type        = map(list(string))
+  default     = {}
+}
+
 variable "alb_arn" {
   description = "ARN of the load balancer"
   type        = string

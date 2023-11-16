@@ -14,6 +14,7 @@ module "lattice" {
 
   prefix                         = var.prefix
   tags                           = var.tags
+  principal_tags                 = var.principal_tags
   graphos_organizational_unit_id = var.graphos_organizational_unit_id
   graphos_account_id             = var.graphos_account_id
 

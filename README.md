@@ -52,6 +52,9 @@ module "graphos_aws" {
       lambda_function_arn = "arn:aws:lambda:eu-west-1:012346789012:function:test-function"
     }
   }
+
+  apollo_account_ids = ["my_account_id"]
+  apollo_graph_refs  = ["my-graph@my-variant"]
 }
 ```
 
@@ -65,6 +68,8 @@ module "graphos_aws" {
   * `alb_port`: Port the ALB receives traffic through (defaults to 80)
 * `lambda_subgraphs`: map of subgraph names to Lambda functions
   * `lambda_function_arn`: ARN of the Lambda function
+* `apollo_account_ids`: List of unique identifiers to your Apollo accounts, to only allow traffic from Cloud Routers in your Apollo account only as an extra layer of security. This value is not the same as the Apollo Account ID in your Organization settings page.
+* `apollo_graph_refs`: List of graph variant references, to only allow traffic from Cloud Routers matching those specific graph variant references.
 
 ## Outputs
 
