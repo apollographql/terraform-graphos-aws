@@ -54,6 +54,17 @@ data "aws_iam_policy_document" "graphos_policy" {
       variable = "aws:PrincipalOrgPaths"
       values   = ["o-9vaxczew6u/*/ou-leyb-l9pccq2t/${var.graphos_organizational_unit_id}/*"]
     }
+
+    // Restrict based on tags on the principal
+    dynamic "condition" {
+      for_each = var.principal_tags
+
+      content {
+        test     = "StringEquals"
+        variable = "aws:PrincipalTag/${condition.key}"
+        values   = condition.value
+      }
+    }
   }
 }
 

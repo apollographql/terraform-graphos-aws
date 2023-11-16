@@ -27,6 +27,18 @@ variable "lambda_subgraphs" {
   default = {}
 }
 
+variable "apollo_account_ids" {
+  description = "Restrict traffic based on a unique identifier per account"
+  type        = list(string)
+  default     = []
+}
+
+variable "apollo_graph_refs" {
+  description = "Restrict traffic based on Cloud Router graph variant identifiers (e.g. my-graph@my-variant)"
+  type        = list(string)
+  default     = []
+}
+
 variable "graphos_organizational_unit_id" {
   type    = string
   default = "ou-leyb-fvqz35yo"

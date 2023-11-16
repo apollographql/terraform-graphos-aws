@@ -16,6 +16,12 @@ variable "default_target_group" {
   default     = ""
 }
 
+variable "principal_tags" {
+  description = "Restrict content based on the values of these tags"
+  type        = map(list(string))
+  default     = {}
+}
+
 variable "graphos_organizational_unit_id" {
   type    = string
   default = "ou-leyb-fvqz35yo"
